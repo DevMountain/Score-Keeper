@@ -19,10 +19,14 @@
     self.window.backgroundColor = [UIColor whiteColor];
 
     SKScoreViewController *viewController = [SKScoreViewController new];
+
+    // By creating a navigation controller we will have a nav bar, and a visible title.
     UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:viewController];
+    navigationController.navigationBar.translucent = NO;
+    
+    // Then we can set the navigation controller as the root view controller instead of a uiviewcontroller
     self.window.rootViewController = navigationController;
     
-
     [self.window makeKeyAndVisible];
     return YES;
 }
