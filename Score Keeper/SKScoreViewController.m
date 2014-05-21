@@ -9,7 +9,8 @@
 #import "SKScoreViewController.h"
 
 static CGFloat scoreHeight = 90;
-static CGFloat nameFieldWidth = 100;
+static CGFloat nameFieldWidth = 90;
+static CGFloat scoreFieldWidth = 90;
 
 @interface SKScoreViewController () <UITextFieldDelegate>
 
@@ -60,6 +61,13 @@ static CGFloat nameFieldWidth = 100;
     nameField.delegate = self;
     nameField.placeholder = @"Name";
     [view addSubview:nameField];
+
+    UITextField *scoreField = [[UITextField alloc] initWithFrame:CGRectMake(40 + nameFieldWidth, 23, scoreFieldWidth, 44)];
+    scoreField.delegate = self;
+    scoreField.text = @"0";
+    scoreField.keyboardType = UIKeyboardTypeNumberPad;
+    scoreField.textAlignment = NSTextAlignmentRight;
+    [view addSubview:scoreField];
     
     UIView *separator = [[UIView alloc] initWithFrame:CGRectMake(0, scoreHeight - 1, self.view.frame.size.width, 1)];
     separator.backgroundColor = [UIColor darkGrayColor];
@@ -86,6 +94,5 @@ static CGFloat nameFieldWidth = 100;
     [textField resignFirstResponder];
     return YES;
 }
-
 
 @end
