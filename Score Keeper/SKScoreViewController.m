@@ -9,8 +9,9 @@
 #import "SKScoreViewController.h"
 
 static CGFloat scoreHeight = 90;
+static CGFloat nameFieldWidth = 100;
 
-@interface SKScoreViewController ()
+@interface SKScoreViewController () <UITextFieldDelegate>
 
 @property (nonatomic, strong) NSMutableArray *scores;
 @property (nonatomic, strong) UIScrollView *scrollView;
@@ -55,6 +56,11 @@ static CGFloat scoreHeight = 90;
     UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, index * scoreHeight, self.view.frame.size.width, scoreHeight)];
     view.backgroundColor = [UIColor lightGrayColor];
     
+    UITextField *nameField = [[UITextField alloc] initWithFrame:CGRectMake(20, 23, nameFieldWidth, 44)];
+    nameField.delegate = self;
+    nameField.placeholder = @"Name";
+    [view addSubview:nameField];
+    
     UIView *separator = [[UIView alloc] initWithFrame:CGRectMake(0, scoreHeight - 1, self.view.frame.size.width, 1)];
     separator.backgroundColor = [UIColor darkGrayColor];
     [view addSubview:separator];
@@ -75,5 +81,11 @@ static CGFloat scoreHeight = 90;
     return [self.scores count] * (scoreHeight + 1);
     
 }
+
+- (BOOL)textFieldShouldReturn:(UITextField *)textField {
+    [textField resignFirstResponder];
+    return YES;
+}
+
 
 @end
