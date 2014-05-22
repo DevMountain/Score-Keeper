@@ -19,6 +19,7 @@ static CGFloat buttonWidth = 130;
 
 @property (nonatomic, strong) NSMutableArray *scores;
 @property (nonatomic, strong) NSMutableArray *scoreFields;
+@property (nonatomic, strong) NSMutableArray *scoreButtons;
 @property (nonatomic, strong) UIScrollView *scrollView;
 
 @property (nonatomic, strong) UIButton *addButton;
@@ -43,6 +44,7 @@ static CGFloat buttonWidth = 130;
     self.title = @"Score Keeper";
     self.scores = [NSMutableArray new];
     self.scoreFields = [NSMutableArray new];
+    self.scoreButtons = [NSMutableArray new];
     
     UIScrollView *scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height - 64)];
     [self.view addSubview:scrollView];
@@ -69,7 +71,10 @@ static CGFloat buttonWidth = 130;
     nameField.placeholder = @"Name";
     [view addSubview:nameField];
 
+    // We need to store the index we're adding as the tag of the text field so that we can find the corresponding button when the text changes
+    
     UITextField *scoreField = [[UITextField alloc] initWithFrame:CGRectMake(20 + nameFieldWidth, 23, scoreFieldWidth, 44)];
+    scoreField.tag = index;
     scoreField.delegate = self;
     scoreField.text = @"0";
     scoreField.keyboardType = UIKeyboardTypeNumberPad;
@@ -77,9 +82,14 @@ static CGFloat buttonWidth = 130;
     [self.scoreFields addObject:scoreField];
     [view addSubview:scoreField];
     
+    // We need to store the index we're adding as the tag of the button so we can find the corresponding text when the user taps the button
+
     UIStepper *stepper = [[UIStepper alloc] initWithFrame:CGRectMake(60 + nameFieldWidth + scoreFieldWidth, 30, stepperButtonWidth, 44)];
+    stepper.maximumValue = 1000;
+    stepper.minimumValue = -1000;
     stepper.tag = index;
     [stepper addTarget:self action:@selector(stepperChanged:) forControlEvents:UIControlEventValueChanged];
+    [self.scoreButtons addObject:stepper];
     [view addSubview:stepper];
     
     UIView *separator = [[UIView alloc] initWithFrame:CGRectMake(0, scoreHeight - 1, self.view.frame.size.width, 1)];
@@ -157,6 +167,11 @@ static CGFloat buttonWidth = 130;
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField {
     [textField resignFirstResponder];
+    
+    NSInteger value = [textField.text integerValue];
+    UIStepper *stepper = [self.scoreButtons objectAtIndex:textField.tag];
+    stepper.value = value;
+    
     return YES;
 }
 
