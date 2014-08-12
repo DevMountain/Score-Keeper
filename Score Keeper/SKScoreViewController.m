@@ -8,16 +8,12 @@
 
 #import "SKScoreViewController.h"
 
-static CGFloat scoreHeight = 90;
-static CGFloat nameFieldWidth = 90;
-static CGFloat scoreFieldWidth = 60;
-static CGFloat stepperButtonWidth = 90;
-
-static CGFloat buttonWidth = 130;
+static CGFloat margin = 20;
+static CGFloat scoreViewHeight = 90;
 
 @interface SKScoreViewController () <UITextFieldDelegate>
 
-@property (nonatomic, strong) NSMutableArray *scores;
+@property (nonatomic, strong) NSMutableArray *scoreViews;
 @property (nonatomic, strong) NSMutableArray *scoreFields;
 @property (nonatomic, strong) NSMutableArray *scoreButtons;
 @property (nonatomic, strong) UIScrollView *scrollView;
@@ -42,7 +38,8 @@ static CGFloat buttonWidth = 130;
     [super viewDidLoad];
     
     self.title = @"Score Keeper";
-    self.scores = [NSMutableArray new];
+    
+    self.scoreViews = [NSMutableArray new];
     self.scoreFields = [NSMutableArray new];
     self.scoreButtons = [NSMutableArray new];
     
@@ -50,53 +47,66 @@ static CGFloat buttonWidth = 130;
     [self.view addSubview:scrollView];
     self.scrollView = scrollView;
 
-    [self updateScrollViewContentSize];
-    [self setupInitialScoreViews];
-    
-}
-
-- (void)setupInitialScoreViews {
-
     [self addScoreView];
-
+    
 }
 
 - (void)addScoreView {
     
-    NSInteger index = [self.scores count];
+    CGFloat nameFieldWidth = 90;
+    CGFloat scoreFieldWidth = 60;
+    CGFloat stepperButtonWidth = 90;
+    
+    NSInteger index = [self.scoreViews count];
+    CGFloat width = self.view.frame.size.width;
 
-    UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, index * scoreHeight, self.view.frame.size.width, scoreHeight)];
-    UITextField *nameField = [[UITextField alloc] initWithFrame:CGRectMake(20, 23, nameFieldWidth, 44)];
+    UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, index * scoreViewHeight, width, scoreViewHeight)];
+    
+    // We set the nameField tag as -1000 so that we can ignore it when we set the score via the textfield
+
+    UITextField *nameField = [[UITextField alloc] initWithFrame:CGRectMake(margin, margin, nameFieldWidth, 44)];
+    nameField.tag = -1000;
     nameField.delegate = self;
     nameField.placeholder = @"Name";
     [view addSubview:nameField];
 
     // We need to store the index we're adding as the tag of the text field so that we can find the corresponding button when the text changes
     
-    UITextField *scoreField = [[UITextField alloc] initWithFrame:CGRectMake(20 + nameFieldWidth, 23, scoreFieldWidth, 44)];
+    UITextField *scoreField = [[UITextField alloc] initWithFrame:CGRectMake(margin + nameFieldWidth, margin, scoreFieldWidth, 44)];
     scoreField.tag = index;
     scoreField.delegate = self;
     scoreField.text = @"0";
-    scoreField.keyboardType = UIKeyboardTypeNumberPad;
     scoreField.textAlignment = NSTextAlignmentCenter;
     [self.scoreFields addObject:scoreField];
     [view addSubview:scoreField];
     
+
+    // Black Diamond:
+    scoreField.keyboardType = UIKeyboardTypeNumberPad;
+    // Because we use the numberpad we need to add a done button to the textfield
+    UIBarButtonItem *doneItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(dismissButtonPressed:)];
+    doneItem.tag = index;
+    UIBarButtonItem *flexableItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:NULL];
+    UIToolbar *toolbar = [[UIToolbar alloc] initWithFrame:CGRectMake(0, 0, [[UIScreen mainScreen] bounds].size.width, 44)];
+    [toolbar setItems:[NSArray arrayWithObjects:flexableItem,doneItem, nil]];
+    scoreField.inputAccessoryView = toolbar;
+    
+    
     // We need to store the index we're adding as the tag of the button so we can find the corresponding text when the user taps the button
 
-    UIStepper *stepper = [[UIStepper alloc] initWithFrame:CGRectMake(60 + nameFieldWidth + scoreFieldWidth, 30, stepperButtonWidth, 44)];
-    stepper.maximumValue = 1000;
-    stepper.minimumValue = -1000;
-    stepper.tag = index;
-    [stepper addTarget:self action:@selector(stepperChanged:) forControlEvents:UIControlEventValueChanged];
-    [self.scoreButtons addObject:stepper];
-    [view addSubview:stepper];
+    UIStepper *scoreStepper = [[UIStepper alloc] initWithFrame:CGRectMake(60 + nameFieldWidth + scoreFieldWidth, 30, stepperButtonWidth, 44)];
+    scoreStepper.maximumValue = 1000;
+    scoreStepper.minimumValue = -1000;
+    scoreStepper.tag = index;
+    [scoreStepper addTarget:self action:@selector(scoreStepperChanged:) forControlEvents:UIControlEventValueChanged];
+    [self.scoreButtons addObject:scoreStepper];
+    [view addSubview:scoreStepper];
     
-    UIView *separator = [[UIView alloc] initWithFrame:CGRectMake(0, scoreHeight - 1, self.view.frame.size.width, 1)];
+    UIView *separator = [[UIView alloc] initWithFrame:CGRectMake(0, scoreViewHeight - 1, self.view.frame.size.width, 1)];
     separator.backgroundColor = [UIColor lightGrayColor];
     [view addSubview:separator];
     
-    [self.scores addObject:view];
+    [self.scoreViews addObject:view];
     [self.scrollView addSubview:view];
     
     [self updateButtonView];
@@ -105,6 +115,8 @@ static CGFloat buttonWidth = 130;
 
 - (void)updateButtonView {
     
+    CGFloat buttonWidth = 130;
+
     if (!self.addButton) {
         UIButton *addButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
         [addButton setTitle:@"Add Player" forState:UIControlStateNormal];
@@ -114,7 +126,7 @@ static CGFloat buttonWidth = 130;
         self.addButton = addButton;
     }
     
-    self.addButton.frame = CGRectMake(20, ([self.scores count] * scoreHeight) + 23, buttonWidth, 44);
+    self.addButton.frame = CGRectMake(20, ([self.scoreViews count] * scoreViewHeight) + 23, buttonWidth, 44);
     
     if (!self.removeButton) {
         
@@ -126,23 +138,23 @@ static CGFloat buttonWidth = 130;
         self.removeButton = removeButton;
     }
     
-    self.removeButton.frame = CGRectMake(170, ([self.scores count] * scoreHeight) + 23, buttonWidth, 44);
+    self.removeButton.frame = CGRectMake(170, ([self.scoreViews count] * scoreViewHeight) + 23, buttonWidth, 44);
     
     [self updateScrollViewContentSize];
 }
 
 - (void)removeLastScore {
     
-    UIView *view = self.scores.lastObject;
+    UIView *view = self.scoreViews.lastObject;
     [view removeFromSuperview];
     
-    [self.scores removeObject:view];
+    [self.scoreViews removeObject:view];
     
     [self updateButtonView];
 }
 
 
-- (void)stepperChanged:(id)sender {
+- (void)scoreStepperChanged:(id)sender {
 
     UIStepper *stepper = sender;
     NSInteger index = stepper.tag;
@@ -150,29 +162,38 @@ static CGFloat buttonWidth = 130;
 
     UITextField *scoreField = self.scoreFields[index];
     scoreField.text = [NSString stringWithFormat:@"%d", (int)value];
-
 }
 
 - (void)updateScrollViewContentSize {
     
     self.scrollView.contentSize = CGSizeMake(self.view.frame.size.width, [self scrollViewContentHeight]);
-    
 }
 
 - (CGFloat)scrollViewContentHeight {
 
-    return ([self.scores count] + 1) * (scoreHeight);
-    
+    return ([self.scoreViews count] + 1) * (scoreViewHeight);
 }
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField {
     [textField resignFirstResponder];
     
     NSInteger value = [textField.text integerValue];
-    UIStepper *stepper = [self.scoreButtons objectAtIndex:textField.tag];
+    UIStepper *stepper = self.scoreButtons[textField.tag];
     stepper.value = value;
     
     return YES;
+}
+
+- (void)dismissButtonPressed:(id)sender {
+    
+    UITextField *scoreField = self.scoreFields[[sender tag]];
+
+    NSInteger value = [scoreField.text integerValue];
+    UIStepper *stepper = self.scoreButtons[scoreField.tag];
+    stepper.value = value;
+
+    [scoreField resignFirstResponder];
+    
 }
 
 @end
