@@ -1,4 +1,4 @@
-Score-Keeper-Swift
+Score-Keeper
 ==================
 
 A simple iOS app with a single scroll view with score fields and stepper buttons.
