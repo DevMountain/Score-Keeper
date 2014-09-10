@@ -94,4 +94,9 @@ static CGFloat scoreViewHeight = 90;
     scoreLabel.text = [NSString stringWithFormat:@"%d", (int)value];
 }
 
+- (BOOL)textFieldShouldReturn:(UITextField *)textField {
+    [textField resignFirstResponder];
+    return YES;
+}
+
 @end
