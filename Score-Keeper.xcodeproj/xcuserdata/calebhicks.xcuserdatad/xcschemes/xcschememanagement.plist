@@ -4,7 +4,7 @@
 <dict>
 	<key>SchemeUserState</key>
 	<dict>
-		<key>Score Keeper.xcscheme</key>
+		<key>Score-Keeper.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
 			<integer>0</integer>
@@ -12,12 +12,12 @@
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
-		<key>71DEBF0F1924955A0032F31F</key>
+		<key>68B0ED241A9E724E0059326B</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>71DEBF2A1924955A0032F31F</key>
+		<key>68B0ED401A9E724E0059326B</key>
 		<dict>
 			<key>primary</key>
 			<true/>
