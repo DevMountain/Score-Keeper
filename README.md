@@ -29,14 +29,14 @@ A simple iOS app with a single scroll view with score fields and stepper buttons
 - In the addScoreView method set the tag of your stepper to the index you passed in
 - In the addScoreView method add the scoreLabel to your scoreLabels array
 
-###Step 4: Add an IBAction to the stepper
-- Create an IBAction for when the score stepper value changes
+###Step 5: Add a target action to the stepper
+- Create an action method for when the score stepper value changes
 - Add self as target for the control event ValueChanged to the score stepper
-- In the IBAction method capture the value of the stepper
+- In the action method capture the value of the stepper
 - Get the label from the array of labels that is at the index matching the tag of stepper
 - Update the text of the label to match the value of the stepper
 
-###Step 5: Dismiss the keyboard when done editing name
+###Step 6: Dismiss the keyboard when done editing name
 - Set self as the delegate of the nameTextField
 - Add a textFieldShouldReturn delegate method
 - In that method have the textField resign firstResponder
