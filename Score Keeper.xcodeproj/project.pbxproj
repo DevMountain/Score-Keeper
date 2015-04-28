@@ -19,6 +19,7 @@
 		71DEBF2F1924955A0032F31F /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 71DEBF171924955A0032F31F /* UIKit.framework */; };
 		71DEBF371924955A0032F31F /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 71DEBF351924955A0032F31F /* InfoPlist.strings */; };
 		71DEBF391924955A0032F31F /* Score_KeeperTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 71DEBF381924955A0032F31F /* Score_KeeperTests.m */; };
+		71DEBF441924956F0032F31F /* SKScoreViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 71DEBF431924956F0032F31F /* SKScoreViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -48,6 +49,8 @@
 		71DEBF341924955A0032F31F /* Score KeeperTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Score KeeperTests-Info.plist"; sourceTree = "<group>"; };
 		71DEBF361924955A0032F31F /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		71DEBF381924955A0032F31F /* Score_KeeperTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Score_KeeperTests.m; sourceTree = "<group>"; };
+		71DEBF421924956F0032F31F /* SKScoreViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SKScoreViewController.h; sourceTree = "<group>"; };
+		71DEBF431924956F0032F31F /* SKScoreViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SKScoreViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -109,6 +112,8 @@
 			children = (
 				71DEBF221924955A0032F31F /* SKAppDelegate.h */,
 				71DEBF231924955A0032F31F /* SKAppDelegate.m */,
+				71DEBF421924956F0032F31F /* SKScoreViewController.h */,
+				71DEBF431924956F0032F31F /* SKScoreViewController.m */,
 				71DEBF251924955A0032F31F /* Images.xcassets */,
 				71DEBF1A1924955A0032F31F /* Supporting Files */,
 			);
@@ -242,6 +247,7 @@
 			files = (
 				71DEBF241924955A0032F31F /* SKAppDelegate.m in Sources */,
 				71DEBF201924955A0032F31F /* main.m in Sources */,
+				71DEBF441924956F0032F31F /* SKScoreViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
